@@ -1,0 +1,6 @@
+@ExchangeRateApp_HostAddress = http://localhost:5100
+
+GET {{ExchangeRateApp_HostAddress}}/exchangerateapp/
+Accept: application/json
+
+###

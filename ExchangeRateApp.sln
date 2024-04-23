@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeRateApp", "ExchangeRateApp\ExchangeRateApp.csproj", "{96273C6A-F2BE-4549-B1F8-2D5C2F39BAB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96273C6A-F2BE-4549-B1F8-2D5C2F39BAB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96273C6A-F2BE-4549-B1F8-2D5C2F39BAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96273C6A-F2BE-4549-B1F8-2D5C2F39BAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96273C6A-F2BE-4549-B1F8-2D5C2F39BAB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E10655E0-2AE1-4B7B-BE21-041E449D64C2}
+	EndGlobalSection
+EndGlobal
