@@ -31,22 +31,4 @@ app.MapControllers();
 
 app.Run();
 
-//// --- TEST --- //
 
-//var httpClient = new HttpClient();
-//var provider = new ExchangeRateProvider(httpClient);
-//var currencies = new List<Currency> { new Currency("USD"), new Currency("EUR") };
-
-//try
-//{
-//    var rates = await provider.GetExchangeRates(currencies);
-//    foreach (var rate in rates)
-//    {
-//        Console.WriteLine($"1 {rate.SourceCurrency.Code} = {rate.Rate} {rate.TargetCurrency.Code}");
-//    }
-
-//}
-//catch (Exception ex)
-//{
-//    Console.WriteLine($"An error occurred: {ex.Message}");
-//}

@@ -17,39 +17,47 @@ public class ExchangeRateProvider : IExchangeRateProvider
     private const string CnbUrl = "https://www.cnb.cz/en/financial_markets/foreign_exchange_market/exchange_rate_fixing/daily.txt";
     private readonly Currency BaseCurrency = new Currency("CZK");
 
+    private class CnbExchangeRate
+    {
+        public string Country { get; set; }
+        public string Currency { get; set; }
+        public string Code { get; set; }
+        public int Amount { get; set; }
+        public decimal Rate { get; set; }
+    }
+
     public ExchangeRateProvider(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<ExchangeRate?>> GetExchangeRates(IEnumerable<Currency> currencies)
+    public async Task<IEnumerable<ExchangeRate?>> GetExchangeRates(IEnumerable<Currency> requestedCurrencies)
     {
         var response = await _httpClient.GetStringAsync(CnbUrl);
 
-        var lines = response.Split(new[] { "\n" }, StringSplitOptions.None);
+        var linesOfRates = response.Split(new[] { "\n" }, StringSplitOptions.None); // lines of extracted rates from CNB
 
         var rates = new List<ExchangeRate>();
-        var cnbRates = new List<CnbExchangeRate>();
 
-        foreach (var line in lines.Skip(2)) // skip the header
+        foreach (var line in linesOfRates.Skip(2)) // skip the header
         {
             try
             {
                 var columns = line.Split('|');
-                var rate = new CnbExchangeRate
+                var cnbRate = new CnbExchangeRate
                 {
-                    Country  = columns[0].Trim(),
+                    Country = columns[0].Trim(),
                     Currency = columns[1].Trim(),
-                    Amount   = int.Parse(columns[2].Trim(), CultureInfo.InvariantCulture),
-                    Code     = columns[3].Trim(),
-                    Rate     = decimal.Parse(columns[4].Trim(), CultureInfo.InvariantCulture)
+                    Amount = int.Parse(columns[2].Trim(), CultureInfo.InvariantCulture),
+                    Code = columns[3].Trim(),
+                    Rate = decimal.Parse(columns[4].Trim(), CultureInfo.InvariantCulture)
                 };
 
-                var currency = new Currency(rate.Code);
+                var sourceCurrency = new Currency(cnbRate.Code);
 
-                if (currencies.Any(c => c.Code == currency.Code))
+                if (requestedCurrencies.Any(c => c.Code.ToLower() == sourceCurrency.Code.ToLower()))
                 {
-                    rates.Add(new ExchangeRate(BaseCurrency, currency, rate.Rate, rate.Amount));
+                    rates.Add(new ExchangeRate(BaseCurrency, sourceCurrency, cnbRate.Rate, cnbRate.Amount));
                 }
             }
             catch (FormatException fe)
@@ -63,14 +71,5 @@ public class ExchangeRateProvider : IExchangeRateProvider
         }
 
         return rates;
-    }
-
-    private class CnbExchangeRate
-    {
-        public string  Country { get; set; }
-        public string  Currency { get; set; }
-        public string  Code { get; set; }
-        public int     Amount { get; set; }
-        public decimal Rate { get; set; }
     }
 }

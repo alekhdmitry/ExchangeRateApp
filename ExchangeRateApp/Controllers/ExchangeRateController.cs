@@ -21,18 +21,37 @@ namespace ExchangeRateApp.Controllers
         {
             try
             {
-                var currencies = new List<Currency>();
+                var requestedCurrencies = new List<Currency>();
                 foreach (var code in currencyCodes)
                 {
-                    currencies.Add(new Currency(code));
+                    if (code.Count() > 3) // format check
+                    {
+                        return BadRequest($"Invalid Currency Code format '{code}', please use Three-letter ISO 4217 code of the currency.");
+                    }
+                    requestedCurrencies.Add(new Currency(code));
                 }
 
-                var result = await _exchangeRateProvider.GetExchangeRates(currencies);
+                var rates = await _exchangeRateProvider.GetExchangeRates(requestedCurrencies);
 
-                if (result.Count() == 0 || result is null)
-                    return NotFound("Currency not found");
+                if (rates.Count() == 0 || rates is null) // empty check
+                {
+                    foreach (var code in currencyCodes)
+                    {
+                        Console.WriteLine($"Currency '{code}' not found");
+                    }
 
-                return Ok(result);
+                    return NotFound($"Currency '{currencyCodes.FirstOrDefault()}' not found");
+                }
+                else
+                {
+                    Console.WriteLine($"Successfully retrieved '{rates.Count()}' exchange rates:");
+                    foreach (var rate in rates)
+                    {
+                        Console.WriteLine($"{rate?.Amount} {rate?.SourceCurrency.Code} = {rate?.Rate} {rate?.TargetCurrency.Code}");
+                    }
+
+                    return Ok(rates);
+                }
             }
             catch (System.Exception ex)
             {
